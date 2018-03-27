@@ -1,4 +1,5 @@
 using System;
+using ConsoleChatClient.Models;
 
 public class ConsoleChatOutput
 {
@@ -20,7 +21,8 @@ public class ConsoleChatOutput
             Console.ForegroundColor = ConsoleColor.Yellow;
         }
         Console.Write(message.SenderName + " ");
-        Console.ForegroundColor = previousColor;
+        Console.ForegroundColor = ConsoleColor.Gray;
         Console.WriteLine(message.Text);
+        Console.ForegroundColor = previousColor;
     }
 }

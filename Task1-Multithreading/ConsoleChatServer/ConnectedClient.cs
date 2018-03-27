@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Sockets;
 
-public class Client
+public class ConnectedClient
 {
     public string Name { get; set; }
     public TcpClient TcpClient { get; set; }

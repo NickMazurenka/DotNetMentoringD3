@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 public class Server
 {
     private TcpListener _listener;
-    private List<Client> _clients = new List<Client>();
+    private List<ConnectedClient> _clients = new List<ConnectedClient>();
 
     public Server(IPAddress address, int port)
     {
@@ -29,7 +29,7 @@ public class Server
 
             if (clientTask.Result != null)
             {
-                var client = new Client
+                var client = new ConnectedClient
                 {
                     Name = null,
                     TcpClient = clientTask.Result
@@ -45,7 +45,7 @@ public class Server
         }
     }
 
-    private void AssignName(Client client)
+    private void AssignName(ConnectedClient client)
     {
         SendMessage(client, new ServerMessage("Hello, Anonymous. Choose your name. Length between 2 and 16 symbols"));
         while (true)
@@ -72,7 +72,7 @@ public class Server
         }
     }
 
-    private void ProcessClientMessages(Client clientToProcess)
+    private void ProcessClientMessages(ConnectedClient clientToProcess)
     {
         while (true)
         {
@@ -81,14 +81,21 @@ public class Server
             {
                 receivedMessage = ReceiveMessage(clientToProcess.TcpClient);
                 var message = new ServerMessage(receivedMessage.Text, clientToProcess.Name, receivedMessage.Created);
+                Console.Write("Client to process: \"" + clientToProcess.Name + "\". Receivers: ");
                 foreach (var client in _clients)
                 {
+                    Console.Write("\"" + client.Name + "\" ");
                     if (client == clientToProcess)
                     {
                         message.ClientMessage = true;
                     }
+                    else
+                    {
+                        message.ClientMessage = false;
+                    }
                     SendMessage(client, message);
                 }
+                Console.WriteLine();
             }
             catch (IOException)
             {
@@ -114,14 +121,14 @@ public class Server
         return JsonConvert.DeserializeObject<ClientMessage>(serializedMessage);
     }
 
-    private void SendMessage(Client client, ServerMessage message)
+    private void SendMessage(ConnectedClient client, ServerMessage message)
     {
         var serializedMessage = JsonConvert.SerializeObject(message);
         byte[] data = Encoding.ASCII.GetBytes(serializedMessage);
         client.TcpClient.GetStream().Write(data, 0, data.Length);
     }
 
-    private void RemoveClient(Client client)
+    private void RemoveClient(ConnectedClient client)
     {
         var clientName = client.Name != null ? client.Name : "Anonymous";
         Log(String.Format("Client {0} with IP {1} disconnected", clientName, client.IpFormatted), ConsoleColor.Red);

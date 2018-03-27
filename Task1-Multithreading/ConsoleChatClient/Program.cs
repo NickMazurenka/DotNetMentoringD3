@@ -2,8 +2,9 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using ConsoleChatClient.Network;
 
-namespace ConsoleChat
+namespace ConsoleChatClient
 {
     class Program
     {
@@ -12,7 +13,7 @@ namespace ConsoleChat
             var address = IPAddress.Parse("127.0.0.1");
             var port = 7227;
             Console.WriteLine("Hello from console chat!");
-            var client = new Client(new TcpClient(), address, port, new ConsoleChatOutput());
+            var client = new Client(new TcpClientWrapper(), address, port, new ConsoleChatOutput());
             client.Start();
         }
     }
