@@ -5,11 +5,12 @@ namespace TaskExpressionTree
 {
     public class LambdaTransform : ExpressionVisitor
     {
-        private Dictionary<string,string> _parameters;
-        public LambdaTransform(Dictionary<string,string> parameters = null)
+        private Dictionary<string, string> _parameters;
+        public LambdaTransform(Dictionary<string, string> parameters = null)
         {
             _parameters = parameters;
         }
+
         protected override Expression VisitBinary(BinaryExpression node)
         {
             if (node.NodeType == ExpressionType.Add || node.NodeType == ExpressionType.Subtract)
