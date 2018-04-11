@@ -18,7 +18,7 @@ namespace ExpressionTreeTask1
         public void AddToIncrenetTest()
         {
             Expression<Func<int, int>> sourceExpression = (a) => a + (a + 1) * (a + 5) * (a + 1);
-            var transformedExpression = (new LambdaTransform().VisitAndConvert(sourceExpression, ""));
+            var transformedExpression = (new IncrementDecrementTransform().VisitAndConvert(sourceExpression, ""));
             
             _output.WriteLine(transformedExpression.ToString());
 
@@ -33,7 +33,7 @@ namespace ExpressionTreeTask1
         public void SubtractToDecrenetTest()
         {
             Expression<Func<int, int>> sourceExpression = (a) => a + (a - 1) * (a - 5) * (a - 1);
-            var transformedExpression = (new LambdaTransform().VisitAndConvert(sourceExpression, ""));
+            var transformedExpression = (new IncrementDecrementTransform().VisitAndConvert(sourceExpression, ""));
 
             _output.WriteLine(transformedExpression.ToString());
 
