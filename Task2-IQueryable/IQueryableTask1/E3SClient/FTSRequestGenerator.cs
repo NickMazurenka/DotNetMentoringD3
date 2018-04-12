@@ -12,7 +12,6 @@ namespace IQueryableTask1.E3SClient
 	public class FTSRequestGenerator
 	{
         private readonly string SearchTemplate = @"data/searchFts?metaType={metaType}&query={query}&fields={fields}";
-		private readonly UriTemplate FTSSearchTemplate = new UriTemplate(@"data/searchFts?metaType={metaType}&query={query}&fields={fields}");
 		private readonly Uri BaseAddress;
 
 		public FTSRequestGenerator(string baseAddres) : this(new Uri(baseAddres))

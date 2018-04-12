@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using IQueryableTask1.E3SClient;
@@ -23,7 +23,7 @@ namespace IQueryableTask1
         {
         }
     }
-    
+
     public class E3SProviderTests : IClassFixture<ConfigurationFixture>
     {
         protected ConfigurationFixture ConfigurationFixture;
@@ -34,38 +34,31 @@ namespace IQueryableTask1
         }
 
         [Fact]
-        public void WithoutProvider()
+        public void Where_MemberEqualsConstant_MatchesOriginal()
         {
-            var client = new E3SQueryClient(ConfigurationFixture.Configuration["user"], ConfigurationFixture.Configuration["password"]);
-            var res = client.SearchFTS<EmployeeEntity>("workstation:(EPRUIZHW0249)", 0, 1);
+            var directReply = new E3SQueryClient(ConfigurationFixture.Configuration["user"], ConfigurationFixture.Configuration["password"])
+                .SearchFTS<EmployeeEntity>("workstation:(EPRUIZHW0249)", 0, 1).ToList();
 
-            foreach (var emp in res)
-            {
-                Console.WriteLine("{0} {1}", emp.nativeName, emp.shortStartWorkDate);
-            }
+            var providerReply = new E3SEntitySet<EmployeeEntity>(
+                    ConfigurationFixture.Configuration["user"],
+                    ConfigurationFixture.Configuration["password"])
+                .Where(e => e.workStation == "EPRUIZHW0249").ToList();
+
+            Assert.Equal(directReply, providerReply);
         }
 
         [Fact]
-        public void WithoutProviderNonGeneric()
+        public void Where_ConstantEqualsMember_MatchesOriginal()
         {
-            var client = new E3SQueryClient(ConfigurationFixture.Configuration["user"], ConfigurationFixture.Configuration["password"]);            
-            var res = client.SearchFTS(typeof(EmployeeEntity), "workstation:(EPRUIZHW0249)", 0, 10);
+            var directReply = new E3SQueryClient(ConfigurationFixture.Configuration["user"], ConfigurationFixture.Configuration["password"])
+                .SearchFTS<EmployeeEntity>("workstation:(EPRUIZHW0249)", 0, 1).ToList();
 
-            foreach (var emp in res.OfType<EmployeeEntity>())
-            {
-                Console.WriteLine("{0} {1}", emp.nativeName, emp.shortStartWorkDate);
-            }
-        }
+            var providerReply = new E3SEntitySet<EmployeeEntity>(
+                    ConfigurationFixture.Configuration["user"],
+                    ConfigurationFixture.Configuration["password"])
+                .Where(e => "EPRUIZHW0249" == e.workStation).ToList();
 
-        [Fact]
-        public void WithProvider()
-        {
-            var employees = new E3SEntitySet<EmployeeEntity>(ConfigurationFixture.Configuration["user"], ConfigurationFixture.Configuration["password"]);
-
-            foreach (var emp in employees.Where(e => e.workStation == "EPRUIZHW0249"))
-            {
-                Console.WriteLine("{0} {1}", emp.nativeName, emp.shortStartWorkDate);
-            }
+            Assert.Equal(directReply, providerReply);
         }
     }
 }
