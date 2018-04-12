@@ -5,12 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tavis.UriTemplates;
 
 namespace IQueryableTask1.E3SClient
 {
 	public class FTSRequestGenerator
 	{
-		private readonly UriTemplate.Core.UriTemplate FTSSearchTemplate = new UriTemplate.Core.UriTemplate(@"data/searchFts?metaType={metaType}&query={query}&fields={fields}");
+        private readonly string SearchTemplate = @"data/searchFts?metaType={metaType}&query={query}&fields={fields}";
+		private readonly UriTemplate FTSSearchTemplate = new UriTemplate(@"data/searchFts?metaType={metaType}&query={query}&fields={fields}");
 		private readonly Uri BaseAddress;
 
 		public FTSRequestGenerator(string baseAddres) : this(new Uri(baseAddres))
@@ -45,14 +47,11 @@ namespace IQueryableTask1.E3SClient
 
 			var ftsQueryRequestString = JsonConvert.SerializeObject(ftsQueryRequest);
 
-			var uri = FTSSearchTemplate.BindByName(BaseAddress,
-				new Dictionary<string, string>()
-				{
-					{ "metaType", metaTypeName },
-					{ "query", ftsQueryRequestString }
-				});
+            var template = new UriTemplate(BaseAddress + "/" + SearchTemplate);
+            template.SetParameter("metaType", metaTypeName);
+            template.SetParameter("query", ftsQueryRequestString);
 
-			return uri;
+            return new Uri(template.Resolve());
 		}
 
 		private string GetMetaTypeName(Type type)

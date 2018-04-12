@@ -16,7 +16,6 @@ namespace IQueryableTask1.E3SClient
 		private string Password;
 		private Uri BaseAddress = new Uri("https://telescope.epam.com/eco/rest/e3s-eco-scripting-impl/0.1.0");
 
-
 		public E3SQueryClient(string user, string password)
 		{
 			UserName = user;
@@ -34,7 +33,6 @@ namespace IQueryableTask1.E3SClient
 
 			return JsonConvert.DeserializeObject<FTSResponse<T>>(resultString).items.Select(t => t.data);
 		}
-
 
 		public IEnumerable SearchFTS(Type type, string query, int start = 0, int limit = 0)
 		{
@@ -56,7 +54,6 @@ namespace IQueryableTask1.E3SClient
 
 			return list;
 		}
-
 
 		private HttpClient CreateClient()
 		{

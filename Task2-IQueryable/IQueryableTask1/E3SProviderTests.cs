@@ -18,10 +18,12 @@ namespace IQueryableTask1
                 .AddJsonFile("appsettings.json").Build();
 
         }
+
         public void Dispose()
         {
         }
     }
+    
     public class E3SProviderTests : IClassFixture<ConfigurationFixture>
     {
         protected ConfigurationFixture ConfigurationFixture;
@@ -54,7 +56,6 @@ namespace IQueryableTask1
                 Console.WriteLine("{0} {1}", emp.nativeName, emp.shortStartWorkDate);
             }
         }
-
 
         [Fact]
         public void WithProvider()
