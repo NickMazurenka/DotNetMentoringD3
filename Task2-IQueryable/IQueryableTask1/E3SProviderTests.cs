@@ -37,12 +37,12 @@ namespace IQueryableTask1
         public void Where_MemberEqualsConstant_MatchesOriginal()
         {
             var directReply = new E3SQueryClient(ConfigurationFixture.Configuration["user"], ConfigurationFixture.Configuration["password"])
-                .SearchFTS<EmployeeEntity>("workstation:(EPRUIZHW0249)", 0, 1).ToList();
+                .SearchFTS<EmployeeEntity>("workstation:(EPRUIZHW0249)", 0, 1).ToList().Select(e => e.id);
 
             var providerReply = new E3SEntitySet<EmployeeEntity>(
                     ConfigurationFixture.Configuration["user"],
                     ConfigurationFixture.Configuration["password"])
-                .Where(e => e.workStation == "EPRUIZHW0249").ToList();
+                .Where(e => e.workStation == "EPRUIZHW0249").ToList().Select(e => e.id);
 
             Assert.Equal(directReply, providerReply);
         }
@@ -51,12 +51,12 @@ namespace IQueryableTask1
         public void Where_ConstantEqualsMember_MatchesOriginal()
         {
             var directReply = new E3SQueryClient(ConfigurationFixture.Configuration["user"], ConfigurationFixture.Configuration["password"])
-                .SearchFTS<EmployeeEntity>("workstation:(EPRUIZHW0249)", 0, 1).ToList();
+                .SearchFTS<EmployeeEntity>("workstation:(EPRUIZHW0249)", 0, 1).ToList().Select(e => e.id);
 
             var providerReply = new E3SEntitySet<EmployeeEntity>(
                     ConfigurationFixture.Configuration["user"],
                     ConfigurationFixture.Configuration["password"])
-                .Where(e => "EPRUIZHW0249" == e.workStation).ToList();
+                .Where(e => "EPRUIZHW0249" == e.workStation).ToList().Select(e => e.id);
 
             Assert.Equal(directReply, providerReply);
         }
