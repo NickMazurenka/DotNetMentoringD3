@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 
 namespace PowerManagement
@@ -112,46 +113,60 @@ namespace PowerManagement
 
     public class PowerManagement
     {
-        [DllImport("PowrProf.dll")]
-        public static extern UInt32 CallNtPowerInformation
-        (
-            POWER_INFORMATION_LEVEL InformationLevel,
-            IntPtr lpInputBuffer,
-            UInt32 nInputBufferSize,
-            out UInt64 lpOutputBuffer,
-            UInt32 nOutputBufferSize
-        );
-
-        public UInt64 GetLastSleepTimeMilliseconds()
+        public static UInt64 GetLastSleepTimeMilliseconds()
         {
-            UInt64 result = 0;
-            UInt32 status = CallNtPowerInformation(POWER_INFORMATION_LEVEL.LastSleepTime, IntPtr.Zero, 0, out result, sizeof(UInt64));
+            UInt64 result;
+            UInt32 status = LastTimeInfo.CallNtPowerInformation(POWER_INFORMATION_LEVEL.LastSleepTime, IntPtr.Zero, 0, out result, sizeof(UInt64));
             switch ((NTSTATUS)status)
             {
                 case NTSTATUS.STATUS_SUCCESS:
                     return result;
                 case NTSTATUS.STATUS_ACCESS_DENIED:
-                    throw new Exception("Access denied");
+                    throw new Win32Exception((int)status, "Access denied");
                 case NTSTATUS.STATUS_BUFFER_TOO_SMALL:
-                    throw new Exception("Buffer too small");
+                    throw new Win32Exception((int)status, "Buffer too small");
                 default:
-                    throw new Exception("Something went wrong :(");
+                    throw new Win32Exception((int)status, "Something went wrong :(");
             }
         }
 
-        public UInt64 GetLastWakeTimeMilliseconds() {
-            UInt64 result = 1;
-            UInt32 status = CallNtPowerInformation(POWER_INFORMATION_LEVEL.LastWakeTime, IntPtr.Zero, 0, out result, sizeof(UInt64));
+        public static UInt64 GetLastWakeTimeMilliseconds()
+        {
+            UInt64 result;
+            UInt32 status = LastTimeInfo.CallNtPowerInformation(POWER_INFORMATION_LEVEL.LastWakeTime, IntPtr.Zero, 0, out result, sizeof(UInt64));
             switch ((NTSTATUS)status)
             {
                 case NTSTATUS.STATUS_SUCCESS:
                     return result;
                 case NTSTATUS.STATUS_ACCESS_DENIED:
-                    throw new Exception("Access denied");
+                    throw new Win32Exception((int)status, "Access denied");
                 case NTSTATUS.STATUS_BUFFER_TOO_SMALL:
-                    throw new Exception("Buffer too small");
+                    throw new Win32Exception((int)status, "Buffer too small");
                 default:
-                    throw new Exception("Something went wrong :(");
+                    throw new Win32Exception((int)status, "Something went wrong :(");
+            }
+        }
+
+        public static SystemBatteryState GetSystemBatteryState()
+        {
+            SystemBatteryState result;
+            UInt32 status = BatteryStateInfo.CallNtPowerInformation(
+                POWER_INFORMATION_LEVEL.SystemBatteryState,
+                IntPtr.Zero,
+                0,
+                out result,
+                (UInt32)Marshal.SizeOf(typeof(SystemBatteryState)));
+
+            switch ((NTSTATUS)status)
+            {
+                case NTSTATUS.STATUS_SUCCESS:
+                    return result;
+                case NTSTATUS.STATUS_ACCESS_DENIED:
+                    throw new Win32Exception((int)status, "Access denied");
+                case NTSTATUS.STATUS_BUFFER_TOO_SMALL:
+                    throw new Win32Exception((int)status, "Buffer too small");
+                default:
+                    throw new Win32Exception((int)status, "Something went wrong :(");
             }
         }
     }

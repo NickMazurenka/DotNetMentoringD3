@@ -8,15 +8,20 @@ namespace PowerManagementTest
         [Fact]
         public void TestGetLastSleepTimeMilliseconds()
         {
-            var t = new PowerManagement.PowerManagement();
-            Assert.True(t.GetLastSleepTimeMilliseconds() > 0, "Last Sleep Time is greater then 0");
+            Assert.True(PowerManagement.PowerManagement.GetLastSleepTimeMilliseconds() >= 0, "Last Sleep Time is greater or equal to 0");
         }
 
         [Fact]
         public void TestGetLastWakeTimeMilliseconds()
         {
-            var t = new PowerManagement.PowerManagement();
-            Assert.True(t.GetLastWakeTimeMilliseconds() > 0, "Last Wake Time is greater then 0");
+            Assert.True(PowerManagement.PowerManagement.GetLastWakeTimeMilliseconds() >= 0, "Last Wake Time is greater or equal to 0");
+        }
+
+        [Fact]
+        public void TestSystemBatteryState()
+        {
+            var batteryState = PowerManagement.PowerManagement.GetSystemBatteryState();
+            Assert.True(batteryState.AcOnLine, "Battery charger is currently operating on external power");
         }
     }
 }
