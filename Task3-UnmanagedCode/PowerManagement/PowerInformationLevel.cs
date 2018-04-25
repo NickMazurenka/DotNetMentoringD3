@@ -1,10 +1,6 @@
-﻿using System;
-using System.ComponentModel;
-using System.Runtime.InteropServices;
-
 namespace PowerManagement
 {
-    public enum POWER_INFORMATION_LEVEL
+    internal enum POWER_INFORMATION_LEVEL
     {
         SystemPowerPolicyAc,
         SystemPowerPolicyDc,
@@ -103,71 +99,4 @@ namespace PowerManagement
         UpdateBlackBoxRecorder,
         PowerInformationLevelMaximum
     };
-
-    public enum NTSTATUS
-    {
-        STATUS_SUCCESS = 0,
-        STATUS_ACCESS_DENIED = 22,
-        STATUS_BUFFER_TOO_SMALL = 23,
-    }
-
-    public class PowerManagement
-    {
-        public static UInt64 GetLastSleepTimeMilliseconds()
-        {
-            UInt64 result;
-            UInt32 status = LastTimeInfo.CallNtPowerInformation(POWER_INFORMATION_LEVEL.LastSleepTime, IntPtr.Zero, 0, out result, sizeof(UInt64));
-            switch ((NTSTATUS)status)
-            {
-                case NTSTATUS.STATUS_SUCCESS:
-                    return result;
-                case NTSTATUS.STATUS_ACCESS_DENIED:
-                    throw new Win32Exception((int)status, "Access denied");
-                case NTSTATUS.STATUS_BUFFER_TOO_SMALL:
-                    throw new Win32Exception((int)status, "Buffer too small");
-                default:
-                    throw new Win32Exception((int)status, "Something went wrong :(");
-            }
-        }
-
-        public static UInt64 GetLastWakeTimeMilliseconds()
-        {
-            UInt64 result;
-            UInt32 status = LastTimeInfo.CallNtPowerInformation(POWER_INFORMATION_LEVEL.LastWakeTime, IntPtr.Zero, 0, out result, sizeof(UInt64));
-            switch ((NTSTATUS)status)
-            {
-                case NTSTATUS.STATUS_SUCCESS:
-                    return result;
-                case NTSTATUS.STATUS_ACCESS_DENIED:
-                    throw new Win32Exception((int)status, "Access denied");
-                case NTSTATUS.STATUS_BUFFER_TOO_SMALL:
-                    throw new Win32Exception((int)status, "Buffer too small");
-                default:
-                    throw new Win32Exception((int)status, "Something went wrong :(");
-            }
-        }
-
-        public static SystemBatteryState GetSystemBatteryState()
-        {
-            SystemBatteryState result;
-            UInt32 status = BatteryStateInfo.CallNtPowerInformation(
-                POWER_INFORMATION_LEVEL.SystemBatteryState,
-                IntPtr.Zero,
-                0,
-                out result,
-                (UInt32)Marshal.SizeOf(typeof(SystemBatteryState)));
-
-            switch ((NTSTATUS)status)
-            {
-                case NTSTATUS.STATUS_SUCCESS:
-                    return result;
-                case NTSTATUS.STATUS_ACCESS_DENIED:
-                    throw new Win32Exception((int)status, "Access denied");
-                case NTSTATUS.STATUS_BUFFER_TOO_SMALL:
-                    throw new Win32Exception((int)status, "Buffer too small");
-                default:
-                    throw new Win32Exception((int)status, "Something went wrong :(");
-            }
-        }
-    }
 }
