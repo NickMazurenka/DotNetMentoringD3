@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2015
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UselessWindowsService", "UselessWindowsService.csproj", "{EA9BB05A-A29E-4041-8AC5-7B27A9A6AE49}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EA9BB05A-A29E-4041-8AC5-7B27A9A6AE49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA9BB05A-A29E-4041-8AC5-7B27A9A6AE49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA9BB05A-A29E-4041-8AC5-7B27A9A6AE49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA9BB05A-A29E-4041-8AC5-7B27A9A6AE49}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D856FB45-3814-494B-A64C-3C61C105DE0B}
+	EndGlobalSection
+EndGlobal
