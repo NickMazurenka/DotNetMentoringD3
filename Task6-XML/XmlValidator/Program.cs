@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 
@@ -6,29 +7,37 @@ namespace XmlValidator
 {
     class Program
     {
+        private static StringBuilder _errorMessage;
+
         static void Main(string[] args)
         {
+            _errorMessage = new StringBuilder();
+
             var readerSettings = new XmlReaderSettings();
             readerSettings.Schemas.Add("http://library.by/catalog", "books.xsd");
             readerSettings.ValidationType = ValidationType.Schema;
-            readerSettings.ValidationEventHandler += new ValidationEventHandler(booksSettingsValidationEventHandler);
+            readerSettings.ValidationFlags |= XmlSchemaValidationFlags.ProcessInlineSchema;
+            readerSettings.ValidationFlags |= XmlSchemaValidationFlags.ReportValidationWarnings;
+            readerSettings.ValidationEventHandler += ValidationCallBack;
 
-            var books = XmlReader.Create("books.xml", readerSettings);
+            using (var reader = XmlReader.Create("books.xml", readerSettings))
+            {
+                while (reader.Read()) { }
+            }
 
-            while (books.Read()) { }
+            if (_errorMessage.Length == 0)
+            {
+                Console.WriteLine("XML is valid");
+            }
+
+            Console.WriteLine(_errorMessage);
         }
 
-        static void booksSettingsValidationEventHandler(object sender, ValidationEventArgs e)
+        private static void ValidationCallBack(object sender, ValidationEventArgs e)
         {
-            if (e.Severity == XmlSeverityType.Warning)
+            if (sender is XmlReader element)
             {
-                Console.Write("WARNING: ");
-                Console.WriteLine(e.Message);
-            }
-            else if (e.Severity == XmlSeverityType.Error)
-            {
-                Console.Write("ERROR: ");
-                Console.WriteLine(e.Message);
+                _errorMessage.AppendLine($"{element.Name}[{e.Exception.LineNumber}:{e.Exception.LinePosition}] {e.Message})");
             }
         }
     }
