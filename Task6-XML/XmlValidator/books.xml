@@ -2,7 +2,6 @@
 <catalog xmlns="http://library.by/catalog">
   <book id="bk101">
     <isbn>0-596-00103-7</isbn>
-    <isbn>0-596-00103-7</isbn>
     <author>Löwy, Juval</author>
     <title>COM and .NET Component Services</title>
     <genre>Computer</genre>
